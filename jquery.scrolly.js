@@ -26,7 +26,6 @@ var doco     = $(document),
     toggle = function(n) {
         return n < 1 ? "block" : "none";
     },
-    DOMChangeEvent = ns("DOMSubtreeModified propertychange"),
     self = {
 
         axis: function(node, mode) {
@@ -65,8 +64,8 @@ var doco     = $(document),
             with (self.viewport(node)) {
 
                 var a = fromScrollbar ? scrollHeight / offsetHeight : 1;
-                axis.y && (scrollTop  += (dy || 0) * a);
-                axis.x && (scrollLeft += (dx || 0) * a);
+                axis.y && (scrollTop  -= (dy || 0) * a);
+                axis.x && (scrollLeft -= (dx || 0) * a);
 
                 var scrollbarTop    =    scrollTop / scrollHeight,
                     scrollbarLeft   =   scrollLeft / scrollWidth,
@@ -95,10 +94,11 @@ var doco     = $(document),
             clearTimeout(elem.data("scrolly_timer"));
 
             elem.data("scrolly_timer",
-                setTimeout(function(){
-                    elem.removeData("scrolly_timer");
-                }, 500)
-            );
+                    setTimeout(function(){
+                        elem.removeData("scrolly_timer");
+                    }, 1000)
+                )
+                .trigger("scrolly");
         },
 
         enable: function(node) {
@@ -135,15 +135,6 @@ doco.on(ns("mouseover"), scrolly, function() {
         if (elem.hasClass(disabled)) return;
 
         !elem.data("scrolly_timer") && self.update(node);
-
-        elem.off(DOMChangeEvent)
-            .on(DOMChangeEvent, $.throttle(function(){
-                if (elem.hasClass(disabled)) return;
-                self.update(node);
-            }, 250));
-    })
-    .on(ns("mouseout"), scrolly, function() {
-        $(this).off(DOMChangeEvent);
     })
     .on(ns("mousewheel"), scrolly, function(event, delta, dx, dy) {
         if ($(this).hasClass(disabled)) return;
@@ -157,8 +148,8 @@ doco.on(ns("mouseover"), scrolly, function() {
 
                 self.update(
                     node[0],
-                    now.pageX - before.pageX,
-                    now.pageY - before.pageY,
+                    before.pageX - now.pageX,
+                    before.pageY - now.pageY,
                     true
                 );
                 before = event;

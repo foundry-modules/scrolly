@@ -34,14 +34,18 @@
     overflow: hidden;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 1;
+
+    // This is required to ensure child elements
+    // has their own z-space.
+    position: relative;
 }
 
 [data-scrolly-axis] {
     position: absolute;
     border: @scrolly-size solid transparent;
     cursor: pointer;
-    z-index: 1;
+    z-index: 2;
     .transition(opacity .1s ease);
 
     &:before {
