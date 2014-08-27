@@ -17,13 +17,14 @@ var doco     = $(document),
     scrolly  = "[data-scrolly]",
     viewport = "[data-scrolly-viewport]",
     disabled = "scrolly-disabled",
+    activeScrolly = "[data-scrolly]:not(.scrolly-disabled)"
     ns = function(event) {
         return event.split(" ").join(".scrolly ") + ".scrolly";
     },
     percent  = function(n) {
         return n * 100 + "%";
     },
-    toggle = function(n) {
+    toggle_ = function(n) {
         return n < 1 ? "block" : "none";
     },
     self = {
@@ -77,7 +78,7 @@ var doco     = $(document),
                 with (self.x(node).style) {
                     left    = percent(scrollbarLeft);
                     width   = percent(scrollbarWidth);
-                    display = toggle(scrollbarWidth);
+                    display = toggle_(scrollbarWidth);
                 }
             }
 
@@ -85,7 +86,7 @@ var doco     = $(document),
                 with (self.y(node).style) {
                     top     = percent(scrollbarTop);
                     height  = percent(scrollbarHeight);
-                    display = toggle(scrollbarHeight);
+                    display = toggle_(scrollbarHeight);
                 }
             }
 
@@ -127,18 +128,15 @@ $.fn.scrolly = function(method) {
 }
 
 // Last update
-doco.on(ns("mouseover"), scrolly, function() {
+doco.on(ns("mouseover"), scrolly, function(event) {
 
-        var node = this,
-            elem = $(node);
-
-        if (elem.hasClass(disabled)) return;
-
-        !elem.data("scrolly_timer") && self.update(node);
+        var node = $(event.target).closest(activeScrolly)[0];
+        node && !$(node).data("scrolly_timer") && self.update(node);
     })
     .on(ns("mousewheel"), scrolly, function(event, delta, dx, dy) {
-        if ($(this).hasClass(disabled)) return;
-        self.update(this, dx, dy);
+
+        var node = $(event.target).closest(activeScrolly)[0];
+        node && self.update(node, dx, dy);
     })
     .on(ns("mousedown"), scrolly + " > s", function(before) {
 
@@ -152,7 +150,7 @@ doco.on(ns("mouseover"), scrolly, function() {
                     before.pageY - now.pageY,
                     true
                 );
-                before = event;
+                before = now;
 
                 // This prevents text selection
                 now.preventDefault();
