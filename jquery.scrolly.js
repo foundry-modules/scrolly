@@ -17,7 +17,7 @@ var doco     = $(document),
     scrolly  = "[data-scrolly]",
     viewport = "[data-scrolly-viewport]",
     disabled = "scrolly-disabled",
-    activeScrolly = "[data-scrolly]:not(.scrolly-disabled)"
+    activeScrolly = "[data-scrolly]:not(.scrolly-disabled)",
     ns = function(event) {
         return event.split(" ").join(".scrolly ") + ".scrolly";
     },
