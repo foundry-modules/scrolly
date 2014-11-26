@@ -5,11 +5,13 @@
 
     [data-scrolly-axis] {
         opacity: 0;
+        .transition-delay(1.5s);
     }
 
     &:hover {
         [data-scrolly-axis] {
             opacity: 1;
+            .transition-delay(0s);
         }
     }
 
@@ -46,7 +48,7 @@
     border: @scrolly-size solid transparent;
     cursor: pointer;
     z-index: 2;
-    .transition(opacity .1s ease);
+    .transition(opacity .2s ease);
 
     &:before {
         position: absolute;
