@@ -13,6 +13,8 @@
 
 (function(){
 
+var isWin = navigator.appVersion.indexOf("Win");
+
 var doco     = $(document),
     scrolly  = "[data-scrolly]",
     viewport = "[data-scrolly-viewport]",
@@ -62,11 +64,14 @@ var doco     = $(document),
 
             var axis = self.axis(node);
 
+            // Fixes slow scrolling on windows
+            var acceleration = isWin ? 28 : 1;
+
             with (self.viewport(node)) {
 
                 var a = fromScrollbar ? scrollHeight / offsetHeight : 1;
-                axis.y && (scrollTop  -= (dy || 0) * a);
-                axis.x && (scrollLeft -= (dx || 0) * a);
+                axis.y && (scrollTop  -= (dy || 0) * a * acceleration);
+                axis.x && (scrollLeft -= (dx || 0) * a * acceleration);
 
                 var scrollbarTop    =    scrollTop / scrollHeight,
                     scrollbarLeft   =   scrollLeft / scrollWidth,
