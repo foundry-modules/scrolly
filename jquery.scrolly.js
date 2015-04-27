@@ -13,7 +13,7 @@
 
 (function(){
 
-var isWin = navigator.appVersion.indexOf("Win");
+var isWin = navigator.appVersion.indexOf("Win") > -1;
 
 var doco     = $(document),
     scrolly  = "[data-scrolly]",
